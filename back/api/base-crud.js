@@ -1,4 +1,5 @@
-// Base CRUD class with API functions
+const pool = require('./../core/db_connection')
+// const app = require('./index')
 class BaseCRUD {
   constructor(tableName) {
     this.tableName = tableName;
@@ -35,6 +36,12 @@ class BaseCRUD {
       .then(result => res.status(201).json({ message: 'Record created successfully', id: result.insertId }))
       .catch(error => res.status(500).json({ message: 'Error creating record', error }));
   }
+
+  
+async readAllAPI(req, res) {
+  const [rows] = await pool.query('SELECT * FROM Users');
+  res.json(rows);
+}
 
   async readAPI(req, res) {
     const id = req.params.id
