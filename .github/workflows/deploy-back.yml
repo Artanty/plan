@@ -1,0 +1,89 @@
+# .github/workflows/vercel.yml
+name: Vercel Deployment
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+  
+      - name: Install dependencies
+        run: npm ci
+        working-directory: ./back
+
+      - name: Create configuration file
+        run: |
+          echo "DB_USERNAME=${{ secrets.DB_USERNAME }} 
+          DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+          DB_DATABASE=${{ secrets.DB_DATABASE }}
+          DB_HOST=${{ secrets.DB_HOST }}" > .env
+        working-directory: ./back
+
+      - name: Show where i am
+        run: |
+          cd back
+          ls -la
+
+      - name: Create vercel.json
+        run: |
+          echo '{
+            "version": 2,
+            "rewrites": [{ "source": "/(.*)", "destination": "/api" }]
+          }' > vercel.json
+        working-directory: ./back
+          
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+        working-directory: ./back
+
+      # - name: Link Vercel Project
+      #   run: vercel link --yes --token=${{ secrets.VERCEL_TOKEN }}
+      #   working-directory: ./back
+
+      - name: Pull Vercel Environment Information
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+        working-directory: ./back
+
+      # - name: Build Project Artifacts
+      #   run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+      #   working-directory: ./back
+
+      # - name: Deploy Project to Vercel
+      #   run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+      #   working-directory: ./back
+
+
+      - name: Add Environment Variables to Vercel
+        # run: |
+        #   vercel link --yes --token=${{ secrets.VERCEL_TOKEN }}
+        #   vercel env add DB_USERNAME ${{ secrets.DB_USERNAME }} --token=${{ secrets.VERCEL_TOKEN }}
+        #   vercel env add DB_PASSWORD ${{ secrets.DB_PASSWORD }} --token=${{ secrets.VERCEL_TOKEN }}
+        #   vercel env add DB_DATABASE ${{ secrets.DB_DATABASE }} --token=${{ secrets.VERCEL_TOKEN }}
+        #   vercel env add DB_HOST ${{ secrets.DB_HOST }} --token=${{ secrets.VERCEL_TOKEN }}
+        run: |
+          # Authenticate with Vercel using the token
+          vercel link --yes --token=${{ secrets.VERCEL_TOKEN }}
+          vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+          # Add environment variables to the project
+          vercel env add DB_USERNAME ${{ secrets.DB_USERNAME }} --token=${{ secrets.VERCEL_TOKEN }}
+          vercel env add DB_PASSWORD ${{ secrets.DB_PASSWORD }} --token=${{ secrets.VERCEL_TOKEN }}
+          vercel env add DB_DATABASE ${{ secrets.DB_DATABASE }} --token=${{ secrets.VERCEL_TOKEN }}
+          vercel env add DB_HOST ${{ secrets.DB_HOST }} --token=${{ secrets.VERCEL_TOKEN }}
+          
+
+
+      - name: Deploy to Vercel
+        run: vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+
