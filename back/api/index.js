@@ -31,7 +31,7 @@ const pool = mysql.createPool({
 // Define a route that makes a query to the database
 app.get('/', async (req, res) => {
   try {
-    const [rows] = await pool.query('SELECT * FROM your_table');
+    const [rows] = await pool.query('SELECT * FROM Users');
     res.json(rows);
   } catch (error) {
     console.error('Error executing query', error);
