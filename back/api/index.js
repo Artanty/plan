@@ -28,7 +28,6 @@ const pool = mysql.createPool({
   queueLimit: 0
 });
 
-// Define a route that makes a query to the database
 app.get('/', async (req, res) => {
   try {
     const [rows] = await pool.query('SELECT * FROM Users');
@@ -38,7 +37,7 @@ app.get('/', async (req, res) => {
     res.status(500).json({ error: 'An error occurred' });
   }
 });
-
+ 
 
 // Database connection
 // const db = mysql.createConnection({
