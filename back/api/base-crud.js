@@ -36,9 +36,14 @@ class BaseCRUD {
   }
 
   readAPI(req, res) {
-    this.read(req.params.id)
+    const id = req.params.id
+    if (id === '1'){
+      res.send('req.params.id === ${id}')
+    } else {
+      this.read(req.params.id)
       .then(record => record ? res.json(record) : res.status(404).json({ message: 'Record not found' }))
       .catch(error => res.status(500).json({ message: 'Error retrieving record', error }));
+    }
   }
 
   updateAPI(req, res) {
