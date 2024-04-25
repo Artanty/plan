@@ -2,55 +2,55 @@ require('dotenv').config({ path: '../.env.local' });
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const path = require('path');
-// const mysql = require('mysql');
-const mysql = require('mysql2/promise');
+const mysql = require('mysql');
+// const mysql = require('mysql2/promise');
 const BaseCRUD = require('./base-crud')
 const express = require('express');
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-// app.get('/', function (req, res) {
-// 	res.send('Main page')
-// });
+app.get('/', function (req, res) {
+	res.send('Main page')
+});
 
-// app.get('/about', function (req, res) {
-// 	res.sendFile(path.join(__dirname, '..', 'components', 'about.htm'));
-// });
+app.get('/about', function (req, res) {
+	res.sendFile(path.join(__dirname, '..', 'components', 'about.htm'));
+});
 // Create a MySQL connection pool
-const pool = mysql.createPool({
-  database: process.env.DB_DATABASE,
-	user: process.env.DB_USERNAME,
-	password: process.env.DB_PASSWORD,
-	host: process.env.DB_HOST,
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0
-});
-
-app.get('/', async (req, res) => {
-  try {
-    const [rows] = await pool.query('SELECT * FROM Users');
-    res.json(rows);
-  } catch (error) {
-    console.error('Error executing query', error);
-    res.status(500).json({ error: 'An error occurred' });
-  }
-});
- 
-
-// Database connection
-// const db = mysql.createConnection({
-// 	database: process.env.DB_DATABASE,
+// const pool = mysql.createPool({
+//   database: process.env.DB_DATABASE,
 // 	user: process.env.DB_USERNAME,
 // 	password: process.env.DB_PASSWORD,
 // 	host: process.env.DB_HOST,
+//   waitForConnections: true,
+//   connectionLimit: 10,
+//   queueLimit: 0
 // });
 
-// db.connect((err) => {
-//   if (err) throw err;
-//   console.log('Connected to database');
+// app.get('/', async (req, res) => {
+//   try {
+//     const [rows] = await pool.query('SELECT * FROM Users');
+//     res.json(rows);
+//   } catch (error) {
+//     console.error('Error executing query', error);
+//     res.status(500).json({ error: 'An error occurred' });
+//   }
 // });
+ 
+
+
+const db = mysql.createConnection({
+	database: process.env.DB_DATABASE,
+	user: process.env.DB_USERNAME,
+	password: process.env.DB_PASSWORD,
+	host: process.env.DB_HOST,
+});
+
+db.connect((err) => {
+  if (err) throw err;
+  console.log('Connected to database');
+});
 
 // Users CRUD operations extending the base class
 class UsersCRUD extends BaseCRUD {
