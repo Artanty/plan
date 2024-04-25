@@ -76,10 +76,10 @@ jobs:
           vercel link --yes --token=${{ secrets.VERCEL_TOKEN }}
           vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
           # Add environment variables to the project
-          vercel env add DB_USERNAME ${{ secrets.DB_USERNAME }} --token=${{ secrets.VERCEL_TOKEN }}
-          vercel env add DB_PASSWORD ${{ secrets.DB_PASSWORD }} --token=${{ secrets.VERCEL_TOKEN }}
-          vercel env add DB_DATABASE ${{ secrets.DB_DATABASE }} --token=${{ secrets.VERCEL_TOKEN }}
-          vercel env add DB_HOST ${{ secrets.DB_HOST }} --token=${{ secrets.VERCEL_TOKEN }}
+          vercel env add DB_USERNAME ${{ secrets.DB_USERNAME }} --prod --token=${{ secrets.VERCEL_TOKEN }}
+          vercel env add DB_PASSWORD ${{ secrets.DB_PASSWORD }} --prod --token=${{ secrets.VERCEL_TOKEN }}
+          vercel env add DB_DATABASE ${{ secrets.DB_DATABASE }} --prod --token=${{ secrets.VERCEL_TOKEN }}
+          vercel env add DB_HOST ${{ secrets.DB_HOST }} --prod --token=${{ secrets.VERCEL_TOKEN }}
           
 
 
