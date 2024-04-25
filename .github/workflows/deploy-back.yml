@@ -67,7 +67,7 @@ jobs:
       - name: Add Environment Variables to Vercel
         run: |
           
-          # vercel link --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+          vercel link --yes --token=${{ secrets.VERCEL_TOKEN }}
           # vercel env add DB_USERNAME ${{ secrets.DB_USERNAME }} --token=${{ secrets.VERCEL_TOKEN }}
           # vercel env add DB_PASSWORD ${{ secrets.DB_PASSWORD }} --token=${{ secrets.VERCEL_TOKEN }}
           # vercel env add DB_DATABASE ${{ secrets.DB_DATABASE }} --token=${{ secrets.VERCEL_TOKEN }}
