@@ -72,7 +72,7 @@ jobs:
           # vercel env add DB_PASSWORD ${{ secrets.DB_PASSWORD }} --token=${{ secrets.VERCEL_TOKEN }}
           # vercel env add DB_DATABASE ${{ secrets.DB_DATABASE }} --token=${{ secrets.VERCEL_TOKEN }}
           # vercel env add DB_HOST ${{ secrets.DB_HOST }} --token=${{ secrets.VERCEL_TOKEN }}
-          vercel env pull ../.env/local production
+          vercel env pull ../.env/local production --token=${{ secrets.VERCEL_TOKEN }}
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
 
