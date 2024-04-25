@@ -5,6 +5,8 @@ const mysql = require('mysql');
 const BaseCRUD = require('./base-crud')
 const express = require('express');
 const app = express();
+app.use(cors());
+app.use(bodyParser.json());
 
 app.get('/', function (req, res) {
 	res.send('Main page')
@@ -30,14 +32,14 @@ db.connect((err) => {
 
 // Users CRUD operations extending the base class
 class UsersCRUD extends BaseCRUD {
-  constructor() {
-    super('Users'); // Pass the table name to the base class
+  constructor(tableName) {
+    super(tableName); // Pass the table name to the base class
   }
 
   // You can add additional methods specific to Users here if needed
 }
 
-const usersCRUD = new UsersCRUD();
+const usersCRUD = new UsersCRUD('Users');
 
 // Express.js routes using the UsersCRUD API functions
 app.post('/users', (req, res) => usersCRUD.createAPI(req, res));
