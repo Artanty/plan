@@ -1,5 +1,5 @@
 const pool = require('./../core/db_connection')
-// const app = require('./index')
+
 class BaseCRUD {
   constructor(tableName) {
     this.tableName = tableName;
@@ -7,26 +7,43 @@ class BaseCRUD {
 
   async create(data) {
     const sql = `INSERT INTO ${this.tableName} SET ?`;
-    const result = await db.query(sql, data);
+    const [result] = await pool.query(sql, data);
     return result;
   }
 
   async read(id) {
     const sql = `SELECT * FROM ${this.tableName} WHERE id = ?`;
-    const [record] = await db.query(sql, [id]);
+    const [record] = await pool.query(sql, [id]);
+    
+    if (!Object.keys(record).length) {
+      throw new Error('Record not found')
+    }
+
+    return record;
+  }
+
+  async readAll() {
+    const sql = `SELECT * FROM ${this.tableName}`;
+    const [record] = await pool.query(sql);
 
     return record;
   }
 
   async update(id, data) {
     const sql = `UPDATE ${this.tableName} SET ? WHERE id = ?`;
-    const result = await db.query(sql, [data, id]);
+    const [result] = await pool.query(sql, [data, id]);
+    if (result.affectedRows === 0) {
+      throw new Error('Record not found')
+    }
     return result;
   }
 
   async delete(id) {
     const sql = `DELETE FROM ${this.tableName} WHERE id = ?`;
-    const result = await db.query(sql, [id]);
+    const [result] = await pool.query(sql, [id]);
+    if (result.affectedRows === 0) {
+      throw new Error('Record not found')
+    }
     return result;
   }
 
@@ -37,36 +54,32 @@ class BaseCRUD {
       .catch(error => res.status(500).json({ message: 'Error creating record', error }));
   }
 
-  
-async readAllAPI(req, res) {
-  const [rows] = await pool.query('SELECT * FROM Users');
-  res.json(rows);
-}
+  readAllAPI(req, res) {
+    this.readAll()
+    .then(result => res.status(201).json(result))
+    .catch(error => this.handleError(res, error));
+  }
 
-  async readAPI(req, res) {
-    const id = req.params.id
-    if (id === '1'){
-      res.send(`id === ${id}; `)
-    } else {
-      this.read(req.params.id)
-      .then(record => record ? res.json(record) : res.status(404).json({ message: 'Record not found' }))
-      .catch(error => {
-        // res.status(500).json({ message: 'Error retrieving record', error })
-        res.send(JSON.stringify(error))
-      });
-    }
+  readAPI(req, res) {
+    this.read(req.params.id)
+      .then(record => res.json(record))
+      .catch(error => this.handleError(res, error));
   }
 
   updateAPI(req, res) {
     this.update(req.params.id, req.body)
-      .then(result => result.affectedRows === 0 ? res.status(404).json({ message: 'Record not found' }) : res.json({ message: 'Record updated successfully' }))
-      .catch(error => res.status(500).json({ message: 'Error updating record', error }));
+      .then(result => res.json({ message: 'Record updated successfully' }))
+      .catch(error => this.handleError(res, error));
   }
 
   deleteAPI(req, res) {
     this.delete(req.params.id)
-      .then(result => result.affectedRows === 0 ? res.status(404).json({ message: 'Record not found' }) : res.json({ message: 'Record deleted successfully' }))
-      .catch(error => res.status(500).json({ message: 'Error deleting record', error }));
+      .then(result => res.json({ message: 'Record deleted successfully' }))
+      .catch(error => this.handleError(res, error));
+  }
+
+  handleError (res, error) {
+    res.status(500).json({ message: String(error) })
   }
 }
 
