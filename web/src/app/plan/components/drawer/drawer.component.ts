@@ -2,6 +2,8 @@ import { AfterViewChecked, AfterViewInit, ChangeDetectionStrategy, ChangeDetecto
 import { RESIZE, TResizeResult, createResizeObservable } from '../../plan.module';
 import { Subscription, Observable, switchMap, takeWhile, filter, startWith, tap, map } from 'rxjs';
 import { ResizeService } from '../../services/resize.service';
+import { DrawerService } from './drawer.service';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-drawer',
@@ -10,25 +12,24 @@ import { ResizeService } from '../../services/resize.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DrawerComponent  implements AfterViewInit {
-  @Input() isOpen = false;
-  @ViewChild('wrapper')
-  myElementRef!: ElementRef;
+
+  @ViewChild('wrapper') drawerWrapperRef!: ElementRef;
+  isVisible$: Observable<boolean>
 
   constructor(
     public elementRef: ElementRef,
     private resizeService: ResizeService,
-  ) {}
+    private drawerService: DrawerService
+  ) {
+    this.isVisible$ = this.drawerService.getDrawerState('createTask')
+  }
 
   ngAfterViewInit(): void {
-    this.resizeService.listenSpies().pipe(
-      filter(Boolean),
-      takeWhile(res => res?.['rootComponent'] !== undefined),
-      switchMap(res=> res['rootComponent']),
-      startWith({width: 0, height: 0}),
-    ).subscribe(res => {
-      console.log(res)
-      this.myElementRef.nativeElement.style.width = `${res.width}px`
+    this.resizeService.listenSpy('rootComponent')
+    .subscribe(res => {
+      this.drawerWrapperRef.nativeElement.style.width = `${res.width}px`
     })
+    this.drawerService.registerDrawer(this.drawerWrapperRef, 'createTask')
   }
 }
 

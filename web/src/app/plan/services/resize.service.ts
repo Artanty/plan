@@ -1,5 +1,5 @@
 import { Injectable, Inject, Optional, ElementRef, ChangeDetectorRef } from '@angular/core';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, filter, startWith, switchMap, takeWhile, tap } from 'rxjs';
 import { TResizeResult, createResizeObservable } from '../plan.module';
 
 export type TElem = Element | ElementRef
@@ -35,5 +35,14 @@ export class ResizeService {
   public killSpy (spies: ISpy, spyName: string) {
     (spies as any)[spyName] = undefined
     delete spies[spyName]
+  }
+
+  public listenSpy(name: string): Observable<TResizeResult> {
+    return this.listenSpies().pipe(
+      filter(Boolean),
+      takeWhile(res => res?.[name] !== undefined),
+      switchMap(res=> res[name]),
+      startWith({width: 0, height: 0}),
+    )
   }
 }

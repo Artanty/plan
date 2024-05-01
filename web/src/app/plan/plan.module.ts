@@ -11,6 +11,8 @@ import { DrawerComponent } from './components/drawer/drawer.component';
 import { DOCUMENT } from '@angular/common';
 import { Observable, debounceTime, map, distinctUntilChanged } from 'rxjs';
 import { ResizeService } from './services/resize.service';
+import { DatePickerComponent } from './components/date-picker/date-picker.component';
+
 
 export type TResizeResult = { width: number, height: number}
 
@@ -48,13 +50,15 @@ export const remoteRoutes: Routes = [
     PlanComponent,
     EntryFormComponent,
     EntriesListComponent,
-    DrawerComponent
+    DrawerComponent,
+    DatePickerComponent
   ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
     HttpClientModule,
-    RouterModule.forChild(remoteRoutes)
+    RouterModule.forChild(remoteRoutes),
+
   ],
   providers: [
     // {

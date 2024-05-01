@@ -1,25 +1,51 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
   <div class="header">
     <div class="chipsContainer">
-      <div class="chips custom-select">
+
+      <button class="backBtn" type="button" (click)="back()"><</button>
+
+      <div class="chips custom-select"
+        [class.invalid]="form.controls['externalServiceId'].invalid && (form.controls['externalServiceId'].dirty || form.controls['externalServiceId'].touched)"
+      >
         <select formControlName="externalServiceId">
-          <option *ngFor="let option of (externals$ | async)" [value]="option.id" [disabled]="option.id === 'placeholder'">
+          <option *ngFor="let option of (externals$ | async)" [value]="option.id" [disabled]="option.id === -1">
             {{ option.name }}
           </option>
         </select>
       </div>
-      <button class="backBtn" type="button" (click)="back()"><</button>
+
+      <div></div>
+
+      <div class="chips custom-select"
+        [class.invalid]="form.controls['status'].invalid && (form.controls['status'].dirty || form.controls['status'].touched)"
+      >
+        <select formControlName="status">
+          <option *ngFor="let option of taskStatusOptions" [value]="option.id" [disabled]="option.id === -1">
+            {{ option.name }}
+          </option>
+        </select>
+      </div>
+
     </div>
   </div>
   <div class="body">
-    <input type="text" formControlName="title" class="taskName" placeholder="Введите заголовок">
+    <input type="text" formControlName="title" class="taskName" placeholder="Введите заголовок"
+      [class.invalid]="form.controls['title'].invalid && (form.controls['title'].dirty || form.controls['title'].touched)"
+    >
+
     <textarea class="description" formControlName="description" placeholder="Введите описание..."></textarea>
+
+    <app-date-picker [reset]="resetDatePicker" (selectedDate)="onSelectDate($event)"></app-date-picker>
   </div>
 
   <input type="hidden" formControlName="externalServiceId">
 
   <div class="footer">
-    <button type="button" (click)="onCancel()">Отмена</button>
-    <button type="submit" [disabled]="!form.valid">Сохранить</button>
+    <button type="button" (click)="onReset()">Сброс</button>
+    <div>
+      <button type="button" (click)="onCancel()">Отмена</button>
+      <!-- [disabled]="!form.valid" -->
+      <button type="submit" >Сохранить</button>
+    </div>
   </div>
 </form>

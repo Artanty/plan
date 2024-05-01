@@ -1,5 +1,6 @@
 .appWrapper{
   max-width: 500px;
+  overflow: hidden;
 }
 :host {
   --bright-blue: oklch(51.01% 0.274 263.83);
