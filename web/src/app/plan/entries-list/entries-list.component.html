@@ -1,0 +1,51 @@
+<div class="wrapper">
+  <div class="header">
+    <form [formGroup]="form">
+      <div class="chipsContainer">
+        <div class="chips custom-select">
+          <select formControlName="externalServiceId">
+            <option *ngFor="let option of (externals$ | async)" [value]="option.id" [disabled]="option.id === 'placeholder'">
+              {{ option.name }}
+            </option>
+          </select>
+        </div>
+        <button class="showCreateBtn" type="button" (click)="showCreate()">+</button>
+      </div>
+    </form>
+  </div>
+  <div class="body">
+    <ul class="tasksContainer">
+      <ng-container *ngFor="let task of (tasks$ | async)">
+        <li>
+          <div class="extId">
+            {{ task.external_task_id }}
+          </div>
+          <div class="taskTitle">
+            {{ task.title }}
+          </div>
+          <div class="taskStatus" [ngSwitch]="task.status">
+            <ng-container *ngSwitchCase="'To Do'">
+              <div class="taskStatus__icon taskStatus__icon--todo"></div>
+              <div class="taskStatus__text">TO DO</div>
+            </ng-container>
+            <ng-container *ngSwitchCase="'In Progress'">
+              <div class="taskStatus__icon taskStatus__icon--inProgress"></div>
+              <div class="taskStatus__text">В процессе</div>
+            </ng-container>
+            <ng-container *ngSwitchCase="'Completed'">
+              <div class="taskStatus__icon taskStatus__icon--completed"></div>
+              <div class="taskStatus__text">Сделано</div>
+            </ng-container>
+          </div>
+        </li>
+      </ng-container>
+    </ul>
+  </div>
+  <div class="footer"></div>
+</div>
+
+<button (click)="toggleDrawer()">Toggle Drawer</button>
+
+<app-drawer [isOpen]="isDrawerOpen">
+  <app-entry-form></app-entry-form>
+</app-drawer>

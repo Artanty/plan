@@ -1,0 +1,25 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="header">
+    <div class="chipsContainer">
+      <div class="chips custom-select">
+        <select formControlName="externalServiceId">
+          <option *ngFor="let option of (externals$ | async)" [value]="option.id" [disabled]="option.id === 'placeholder'">
+            {{ option.name }}
+          </option>
+        </select>
+      </div>
+      <button class="backBtn" type="button" (click)="back()"><</button>
+    </div>
+  </div>
+  <div class="body">
+    <input type="text" formControlName="title" class="taskName" placeholder="Введите заголовок">
+    <textarea class="description" formControlName="description" placeholder="Введите описание..."></textarea>
+  </div>
+
+  <input type="hidden" formControlName="externalServiceId">
+
+  <div class="footer">
+    <button type="button" (click)="onCancel()">Отмена</button>
+    <button type="submit" [disabled]="!form.valid">Сохранить</button>
+  </div>
+</form>
