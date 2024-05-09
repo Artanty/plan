@@ -4,7 +4,7 @@ name: Vercel Deployment
 on:
   push:
     branches:
-      - master
+      - never
 
 jobs:
   deploy:
@@ -35,23 +35,23 @@ jobs:
           cd back
           ls -la
 
-      - name: Create vercel.json
-        run: |
-          echo '{
-            "version": 2,
-            "rewrites": [{ "source": "/(.*)", "destination": "/api" }]
-          }' > vercel.json
-        working-directory: ./back
+      # - name: Create vercel.json
+      #   run: |
+      #     echo '{
+      #       "version": 2,
+      #       "rewrites": [{ "source": "/(.*)", "destination": "/api" }]
+      #     }' > vercel.json
+      #   working-directory: ./back
           
-      - name: Install Vercel CLI
-        run: npm install --global vercel@latest
-        working-directory: ./back
+      # - name: Install Vercel CLI
+      #   run: npm install --global vercel@latest
+      #   working-directory: ./back
 
-      - name: Pull Vercel Environment Information
-        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-        working-directory: ./back
+      # - name: Pull Vercel Environment Information
+      #   run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+      #   working-directory: ./back
 
-      - name: Deploy to Vercel
-        run: vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
+      # - name: Deploy to Vercel
+      #   run: vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
 
 
