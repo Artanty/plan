@@ -1,0 +1,26 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="header">
+    <div class="chipsContainer">
+
+      <button class="backBtn" type="button" (click)="back()"><</button>
+
+    </div>
+  </div>
+  <div class="body">
+    <input type="text" formControlName="name" class="taskName" placeholder="Введите заголовок"
+      [class.invalid]="form.controls['name'].invalid && (form.controls['name'].dirty || form.controls['name'].touched)"
+    >
+
+    <div class="errorMessage">
+      {{ errorMessage }}
+    </div>
+  </div>
+
+  <div class="footer">
+    <button [ngStyle]="{'opacity': Number(isClearBtnVisible)}" type="button" (click)="onReset()">Сброс</button>
+    <div>
+      <button type="button" (click)="onCancel()">Отмена</button>
+      <button type="submit" >Сохранить</button>
+    </div>
+  </div>
+</form>

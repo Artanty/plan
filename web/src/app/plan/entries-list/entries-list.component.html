@@ -1,21 +1,30 @@
-<div class="wrapper">
+<div class="entriesListWrapper">
   <div class="header">
     <form [formGroup]="form">
       <div class="chipsContainer">
-        <div class="chips custom-select">
-          <select formControlName="externalServiceId">
-            <option *ngFor="let option of (externals$ | async)" [value]="option.id" [disabled]="option.id === -1">
-              {{ option.name }}
-            </option>
-          </select>
+        <div style="display: flex;">
+          <div class="chips custom-select">
+            <select formControlName="externalServiceId">
+              <option *ngFor="let option of (externals$ | async)" [value]="option.id" [disabled]="option.id === -1">
+                {{ option.name }}
+              </option>
+            </select>
+          </div>
+          <button class="showCreateBtn" type="button" (click)="showCreateExternal()">+</button>
+          <button class="showCreateBtn" (click)="showExternalList()">
+            <span class="line"></span>
+            <span class="line"></span>
+            <span class="line"></span>
+          </button>
         </div>
-        <button class="showCreateBtn" type="button" (click)="showCreateTask()">+</button>
+        <div></div>
+        <button class="showCreateBtn" type="button" (click)="showCreateTask()">+ task</button>
       </div>
     </form>
   </div>
   <div class="body">
-    <ul class="tasksContainer">
-      <ng-container *ngFor="let task of (tasks$ | async)">
+    <ul class="tasksContainer" #listContainer>
+      <ng-container *ngFor="let task of (tasks$ | async); let i = index">
         <li>
           <div class="extId">
             {{ task.external_task_id }}
@@ -23,21 +32,23 @@
           <div class="taskTitle">
             {{ task.title }}
           </div>
-          <div class="action" (click)="editItem(task)">
+          <div class="action" (click)="editTask(task)">
             <svg height="14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
           </div>
-          <div class="taskStatus" [ngSwitch]="task.status">
+          <div class="taskStatus" [ngSwitch]="task.status"
+          (click)="showStatusSelect(i, task)"
+          data-trigger="setTaskStatus">
             <ng-container *ngSwitchCase="'To Do'">
               <div class="taskStatus__icon taskStatus__icon--todo"></div>
-              <div class="taskStatus__text">TO DO</div>
+              <div class="taskStatus__text">{{ task.status | translate }}</div>
             </ng-container>
             <ng-container *ngSwitchCase="'In Progress'">
               <div class="taskStatus__icon taskStatus__icon--inProgress"></div>
-              <div class="taskStatus__text">В процессе</div>
+              <div class="taskStatus__text">{{ task.status | translate }}</div>
             </ng-container>
             <ng-container *ngSwitchCase="'Completed'">
               <div class="taskStatus__icon taskStatus__icon--completed"></div>
-              <div class="taskStatus__text">Сделано</div>
+              <div class="taskStatus__text">{{ task.status | translate }}</div>
             </ng-container>
           </div>
         </li>
@@ -47,6 +58,19 @@
   <div class="footer"></div>
 </div>
 
-<app-drawer>
+<app-drawer [id]="'createTask'">
   <app-entry-form></app-entry-form>
 </app-drawer>
+
+<app-drawer [id]="'createExternal'">
+  <app-external-form></app-external-form>
+</app-drawer>
+
+<app-drawer [id]="'externalList'">
+  <app-external-list></app-external-list>
+</app-drawer>
+
+<app-drawer [id]="'setTaskStatus'" [side]="'right'" [closeOnClickOutside]="true">
+  <app-status-select></app-status-select>
+</app-drawer>
+

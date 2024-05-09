@@ -1,17 +1,26 @@
 :host{
   position: relative;
+  height: 100%;
+  display: block;
 }
-.wrapper {
+.entriesListWrapper {
   border: 1px solid #45423d;
   border-radius: 6px;
   overflow: hidden;
   background-color: #1d1d1d;
+//
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
 }
 .header{
   background-color: #171717;
-  // border-top-left-radius: 6px;
-  // border-top-right-radius: 6px;
   padding: 8px 5px;
+}
+.chipsContainer{
+  display: flex;
+  justify-content: space-between;
 }
 .chips{
   display: inline-block;
@@ -20,24 +29,22 @@
   border-radius: 4px;
 }
 
-
 .showCreateBtn{
   background: #271191;
   border: none;
   border-radius: 5px;
   color: #e4e4e4;
   line-height: 1.5;
-  width: 26px;
+  min-width: 26px;
   height: 26px;
   margin-left: 8px;
   cursor: pointer;
   font-weight: 600;
 }
 .body{
-  // padding: 10px;
-  display: flex;
-  flex-direction: column;
+  overflow: auto;
 }
+
 .tasksContainer{
   list-style-type: none;
   margin: 0;
@@ -60,6 +67,7 @@
       flex-grow: 1;
       padding: 0 10px;
       line-height: 1;
+      margin-bottom: 3px;
     }
     & .action{
       cursor: pointer;
@@ -72,6 +80,7 @@
       align-items: center;
       justify-content: flex-end;
       width: 70px;
+      cursor: pointer;
       &__icon{
         width: 8px;
         height: 8px;
@@ -142,3 +151,17 @@
 
   }
 }
+
+// HAMBURGER BUTTON START
+.line {
+  background-color: #e4e4e4;
+  display: block;
+  height: 1.6px;
+  margin: 2.4px 0;
+  transition: all 0.3s ease-in-out;
+  width: 14px;
+}
+// .hamburger-button:hover .line {
+//   background-color: #333;
+// }
+// HAMBURGER BUTTON END

@@ -1,8 +1,13 @@
 .appWrapper{
-  max-width: 500px;
   overflow: hidden;
 }
+.controls{
+  position: fixed;
+  top:0;
+  right:0;
+}
 :host {
+
   --bright-blue: oklch(51.01% 0.274 263.83);
   --electric-violet: oklch(53.18% 0.28 296.97);
   --french-violet: oklch(47.66% 0.246 305.88);

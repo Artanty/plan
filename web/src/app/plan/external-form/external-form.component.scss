@@ -1,0 +1,112 @@
+:host{
+  display: block;
+  height: 100%;
+}
+form {
+  max-height:200px;
+  display: flex;
+  flex-direction: column;
+  // border: 1px solid #45423d;
+  border-radius: 6px;
+  overflow: hidden;
+  background-color: #1d1d1d;
+  justify-content: space-between;
+}
+.danger-color{
+  color:red;
+}
+.header{
+  background-color: #171717;
+  padding: 8px 5px;
+}
+
+.chipsContainer{
+  display: flex;
+  justify-content: space-between;
+}
+.chips{
+  display: inline-block;
+  height: 26px;
+  background-color: #2b2b2b;
+  border-radius: 4px;
+}
+
+.backBtn{
+  background: #271191;
+  border: none;
+  border-radius: 5px;
+  color: #e4e4e4;
+  line-height: 1.5;
+  width: 26px;
+  height: 26px;
+  // margin-left: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.body{
+  // flex-grow: 1;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.taskName{
+  background-color: transparent;
+  caret-color: #e0e0e0;
+  color: #797979;
+  outline: none;
+  box-shadow: none;
+  border: none;
+  font-size: 18px;
+  font-weight: 600;
+}
+input.invalid::placeholder{
+  color:red;
+}
+
+.description {
+  flex-grow: 1;
+  color: #c1c1c1;
+  background: transparent;
+  margin-top: 12px;
+  border: none;
+  outline: none;
+  resize: none;
+}
+
+.footer{
+  background-color: #141414;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  & button {
+    cursor: pointer;
+    font-weight: 600;
+    border: 2px solid;
+    border-radius: 17px;
+    padding: 7px 18px;
+    background: transparent;
+
+    &:not([type=submit]){
+      background: #474747;
+      border-color: transparent;
+      color: #d1d1d1;
+    }
+    &[type=submit]{
+      border-color: #7e7e7e;
+      color: #7e7e7e;
+    }
+  }
+  & div > button {
+    margin-left: 15px;
+  }
+}
+button {
+  transition: opacity 0.4s;
+}
+
+.errorMessage{
+  color:red;
+}

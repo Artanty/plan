@@ -1,0 +1,10 @@
+:host{
+  display: block;
+  transition: width 0.3s, height 0.3s;
+}
+.planWrapper{
+  height: 100%;
+  display: block;
+  position: relative;
+  overflow: hidden;
+}

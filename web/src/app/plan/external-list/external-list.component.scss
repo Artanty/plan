@@ -1,0 +1,65 @@
+:host{
+  background-color: #1d1d1d;
+}
+
+.header{
+  background-color: #171717;
+  padding: 8px 5px;
+}
+
+.chipsContainer{
+  display: flex;
+  justify-content: space-between;
+}
+.chips{
+  display: inline-block;
+  height: 26px;
+  background-color: #2b2b2b;
+  border-radius: 4px;
+}
+
+.backBtn{
+  background: #271191;
+  border: none;
+  border-radius: 5px;
+  color: #e4e4e4;
+  line-height: 1.5;
+  width: 26px;
+  height: 26px;
+  // margin-left: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.listContainer{
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  & li {
+    color: #c1c1c1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 8px;
+    margin: 3px 5px;
+    background: #141414;
+    border-radius: 5px;
+    & .listItemName{
+      font-weight: 500;
+      font-size: 14px;
+      font-family: monospace;
+    }
+    & .listItemUrl{
+      flex-grow: 1;
+      padding: 0 10px;
+      line-height: 1;
+      font-size: 11px;
+    }
+    & .action{
+      cursor: pointer;
+      &:hover svg {
+        stroke: #ffffff;
+      }
+    }
+  }
+}

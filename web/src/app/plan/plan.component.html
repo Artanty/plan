@@ -1,4 +1,9 @@
-<div class="" #wrapper>
+<div class="planWrapper" #wrapper>
   <app-entries-list></app-entries-list>
+
+  <app-drawer [id]="'loader'">
+    <app-loader [show]="true"></app-loader>
+  </app-drawer>
+
 </div>
 

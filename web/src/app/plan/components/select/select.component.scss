@@ -9,12 +9,14 @@
     padding: 3px 20px 3px 5px;
     outline: none;
     background-color: #2b2b2b;
-    background-color: transparent;
     border: none;
     color: #d7d7d7;
     cursor: pointer;
   }
-  &::before,
+  & option {
+    background-color: #2b2b2b; /* Set the background color of the options */
+    color: #d7d7d7; /* Set the text color of the options */
+  }
   &::after {
     --size: 4px;
     content: "";
@@ -22,13 +24,6 @@
     right: 8px;
     pointer-events: none;
   }
-
-  // &::before {
-  //   border-left: var(--size) solid transparent;
-  //   border-right: var(--size) solid transparent;
-  //   border-bottom: var(--size) solid black;
-  //   top: 25%;
-  // }
 
   &::after {
     border-left: var(--size) solid transparent;
