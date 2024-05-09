@@ -1,3 +1,8 @@
-<div #wrapper class="drawer" [ngClass]="{'isVisible': isVisible$ | async}">
+<div #wrapper (clickOutside)="handleClickOutside($event)"
+class="drawer"
+[ngClass]="{'isVisible': isVisible$ | async}"
+[class.top]="side === 'top'"
+[class.right]="side === 'right'"
+>
   <ng-content></ng-content>
 </div>

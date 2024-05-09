@@ -1,13 +1,11 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, filter, map } from 'rxjs';
+import { ChangeDetectorRef, ElementRef, Injectable } from '@angular/core';
+import { BehaviorSubject, Observable, distinctUntilChanged, filter, map, of, switchMap, take, tap } from 'rxjs';
 import { TElem } from '../../services/resize.service';
 
-export interface IDrawer {
-  isVisible: boolean
-}
-
-// todo upd 2 Map
+export interface IDrawer { isVisible: boolean }
 export type TDrawerMap = Record<string, IDrawer>
+export type TTriggerMap = { [key: string]: ElementRef[] };
+
 
 @Injectable({
   providedIn: 'root'
@@ -16,19 +14,49 @@ export class DrawerService {
 
   private drawers$ = new BehaviorSubject<TDrawerMap | null>(null)
 
-  constructor() { }
+  constructor() {
+
+  }
+
+  public showAfterInit (name: string) {
+    this.listenDrawerState(name)
+    .pipe(
+      take(1),
+      distinctUntilChanged(),
+      tap(() => {
+        this.show(name)
+      })
+    ).subscribe()
+  }
 
   public listenDrawers (): Observable<TDrawerMap> {
     return this.drawers$.asObservable().pipe(filter(Boolean))
   }
 
-  public getDrawerState (name: string): Observable<boolean> {
+  public listenDrawerState (name: string): Observable<boolean> {
     return this.drawers$.asObservable()
     .pipe(
       filter(Boolean),
-      map(res => res[name]),
-      map(res => res['isVisible'])
+      filter(res => res[name] !== undefined),
+      map(res => {
+        return res[name]
+      }),
+      map(res => {
+        return res['isVisible']
+      }),
+      distinctUntilChanged()
     )
+  }
+
+  public getDrawerState (name: string): boolean {
+    const allDrawers = this.drawers$.value
+    if (allDrawers !==null) {
+      const currentDrawer = allDrawers[name]
+      if (currentDrawer) {
+        return currentDrawer.isVisible
+      }
+    }
+    return false
   }
 
   public show (name: string) {
@@ -86,9 +114,10 @@ export class DrawerService {
     }
   }
 
-  private createNewDrawer () {
+  private createNewDrawer (): IDrawer {
     return {
-      isVisible: false
+      isVisible: false,
+      // listen$: of(false)
     }
   }
 }

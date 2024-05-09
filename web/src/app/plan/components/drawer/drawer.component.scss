@@ -1,15 +1,27 @@
 .drawer {
   position: absolute;
-  top: -100%;
-  width: 250px;
+
+  // width: 250px;
   opacity: 0;
-  height: 100%;
-  background-color: #f8f8f8;
-  transition: top 0.3s ease-out, opacity 0.3s ease-out, width 0.1s ease-out;
+  // height: 100%;
+  // background-color: #f8f8f8;
+  background: rgb(0 0 0 / 64%);
+  transition:
+  top 0.3s ease-out,
+  opacity 0.3s ease-out,
+  // width 0.1s ease-out,
+  right 0.3s ease-out;
+  &.top{
+    top: -100%;
+  }
+  &.right{
+    right: -100%;
+  }
 }
 
 .drawer.isVisible {
   top: 0;
+  right: 0;
   opacity: 1;
 }
 
