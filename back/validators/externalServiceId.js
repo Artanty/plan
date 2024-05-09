@@ -8,10 +8,10 @@ function validateExternalServiceId (external_service_id) {
   }
 
   if (!(project.length >= 2 && project.length <= 4)) { 
-    throw new Error(`Wrong external_service_id: ${external_service_id}, project must be XX, XXX, XXXX format`)
+    throw new Error(`Wrong project in: ${external_service_id}, it should be XX, XXX, XXXX format`)
   }
   if (!service) { 
-    throw new Error(`Wrong external_service_id: ${external_service_id}, no service`)
+    throw new Error(`Wrong external_service_id in: ${external_service_id}, no service`)
   }
 
   return true

@@ -78,8 +78,13 @@ class BaseCRUD {
       .catch(error => this.handleError(res, error));
   }
 
-  handleError (res, error) {
-    res.status(500).json({ message: String(error) })
+  handleError (res, e) {
+    res.status(500).json(
+      { 
+        message: e instanceof Error ? e.message : String(e),
+        error: true
+      }
+    )
   }
 }
 
