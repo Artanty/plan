@@ -1,0 +1,18 @@
+<div class="wrapper">
+  <div class="header">
+    <div class="chipsContainer">
+      <button class="backBtn" type="button" (click)="back()"><</button>
+    </div>
+  </div>
+  <div class="body" #listContainer>
+    <ul [ngStyle]="{ marginTop: yShift+'px'}">
+      <li *ngFor="let item of taskStatusOptions"
+      [class.inactive]="Number(task?.status) === item.id"
+      (click)="Number(task?.status) === item.id ? null : prepareAndEditTask(item.id)">{{ item.name | translate }}</li>
+      <li class="deleteBtn" (click)="deleteTask(task!)">Удалить</li>
+    </ul>
+    <!-- <div class="errorMessage">
+      {{ errorMessage }}
+    </div> -->
+  </div>
+</div>
