@@ -40,6 +40,13 @@ export function getStatusOptions (): TBaseOption[] {
   return taskStatusOptions.map((el: string, i: number) => ({ id: i + 1, name: el }))
 }
 
+export function getStatusId (statusName: string): number {
+  const option = getStatusOptions()
+  .filter((el: TBaseOption) => el.name === statusName)
+  if (!option.length) { throw new Error('wrong status name')}
+  return option[0].id
+}
+
 export function prepareStatus4Api (selectedId: number | string): string {
   const found = getStatusOptions()?.find(el => el.id === Number(selectedId))
   if (!found) {
@@ -48,11 +55,3 @@ export function prepareStatus4Api (selectedId: number | string): string {
   return found?.name
 }
 
-
-export function getServiceNameById (externalServices: TSelectExternals[], externalServiceId: number | string): string {
-  const found = externalServices.find(el => el.id === Number(externalServiceId))
-  if (!found) {
-    throw new Error(`cannot find external service by id: ${externalServiceId}`)
-  }
-  return found.name
-}
