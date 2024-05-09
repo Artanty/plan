@@ -5,12 +5,30 @@
 form {
   display: flex;
   flex-direction: column;
-  border: 1px solid #45423d;
+  // border: 1px solid #45423d;
   border-radius: 6px;
   overflow: hidden;
   background-color: #1d1d1d;
   height: 100%;
   justify-content: space-between;
+}
+
+.custom-input{
+  & input {
+    background: transparent;
+    border: none;
+    color: #d7d7cc;
+    outline: none;
+    padding: 0 7px;
+    font-family: monospace;
+
+  }
+  // &.commitId & input {
+  //   width: 67px;
+  // }
+  // &.projectId & input {
+  //   width: 90px;
+  // }
 }
 .danger-color{
   color:red;
