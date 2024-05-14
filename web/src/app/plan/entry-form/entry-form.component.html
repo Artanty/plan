@@ -1,59 +1,13 @@
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
-  <div class="header">
-    <div class="chipsContainer">
-
-      <button class="backBtn" type="button" (click)="back()"><</button>
-
-      <div class="chips custom-select" *ngIf="!form.value.external_task_id"
-        [class.invalid]="form.controls['externalServiceId'].invalid && (form.controls['externalServiceId'].dirty || form.controls['externalServiceId'].touched)"
-      >
-        <select formControlName="externalServiceId">
-          <option *ngFor="let option of (externals$ | async)" [value]="option.id" [disabled]="option.id === -1">
-            {{ option.name }}
-          </option>
-        </select>
-      </div>
-
-      <div class="chips custom-input projectId" *ngIf="form.value.external_task_id">
-        <input type="text" readonly formControlName="externalServiceName">
-      </div>
-
-      <div class="chips custom-input commitId" [ngStyle]="{'opacity': form.value.external_task_id ? 1 : 0}">
-        <input type="text" readonly formControlName="external_task_id">
-      </div>
-
-      <div class="chips custom-select"
-        [class.invalid]="form.controls['status'].invalid && (form.controls['status'].dirty || form.controls['status'].touched)"
-      >
-        <select formControlName="status">
-          <option *ngFor="let option of taskStatusOptions" [value]="option.id" [disabled]="option.id === -1">
-            {{ option.name }}
-          </option>
-        </select>
-      </div>
-
-    </div>
-  </div>
-  <div class="body">
-    <input type="text" formControlName="title" class="taskName" placeholder="Введите заголовок"
-      [class.invalid]="form.controls['title'].invalid && (form.controls['title'].dirty || form.controls['title'].touched)"
-    >
-
-    <textarea class="description" formControlName="description" placeholder="Введите описание..."></textarea>
-
-    <app-date-picker [date]="due_date"
-    [reset]="resetDatePicker" (selectedDate)="onSelectDate($event)"></app-date-picker>
-  </div>
-
-  <input type="hidden" formControlName="externalServiceId">
-  <input type="hidden" formControlName="id">
-
-  <div class="footer">
-    <button type="button" (click)="onReset()">Сброс</button>
-    <div>
-      <button type="button" (click)="onCancel()">Отмена</button>
-      <!-- [disabled]="!form.valid" -->
-      <button type="submit" >Сохранить</button>
-    </div>
-  </div>
-</form>
+<app-task-form
+  [fg]="form"
+  [externals$]="externals$"
+  [taskStatusOptions]="taskStatusOptions"
+  [doResetDatePicker]="resetDatePicker"
+  [date]="due_date"
+  (onSubmit)="onSubmit()"
+  (onBack)="back()"
+  (onReset)="onReset()"
+  (onCancel)="onCancel()"
+  (onSelectDate)="onSelectDate($event)"
+></app-task-form>
+<!-- <app-task-readonly></app-task-readonly> -->

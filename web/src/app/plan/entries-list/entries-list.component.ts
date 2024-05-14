@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, Inject, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, ElementRef, ViewChild, QueryList, ViewChildren, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { BehaviorSubject, EMPTY, Observable, catchError, distinctUntilKeyChanged, finalize, map, switchMap, take, tap } from 'rxjs';
+import { BehaviorSubject, EMPTY, Observable, catchError, distinctUntilKeyChanged, filter, finalize, map, switchMap, take, tap } from 'rxjs';
 import { DrawerService } from '../components/drawer/drawer.service';
 import { ITask } from './../models/task.model'
 import { IGetTaskApi } from '../../../../../contracts/getTask'
@@ -57,6 +57,7 @@ export class EntriesListComponent implements AfterViewInit{
     this.form.valueChanges.pipe(
       distinctUntilKeyChanged('externalServiceId'),
       tap(res => this.userExternalStore.setUserExternalFilter(+res.externalServiceId)),
+      filter((res) => res.externalServiceId > 0),
       switchMap(res => this.getTasksByService(res.externalServiceId)),
     ).subscribe()
 

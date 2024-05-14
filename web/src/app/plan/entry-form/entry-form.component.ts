@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, Inject } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EMPTY, Observable, catchError, finalize, map, share, shareReplay, switchMap, tap } from 'rxjs';
 import { DrawerService } from '../components/drawer/drawer.service';
@@ -13,13 +13,13 @@ import { UserExternalStoreService } from '../store/userExternal/user-external-st
 import { UserExternalService } from '../services/user-external.service';
 import { TaskService } from '../services/task.service';
 import { TaskApiService } from '../api/task/task-api.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-entry-form',
   templateUrl: './entry-form.component.html',
   styleUrls: [
-    './entry-form.component.scss',
-    './../components/select/select.component.scss'
+    './entry-form.component.scss'
   ]
 })
 export class EntryFormComponent {
@@ -36,15 +36,15 @@ export class EntryFormComponent {
 
   constructor(
     private fb: FormBuilder,
-    @Inject(HttpClient) private http: HttpClient,
     @Inject(DrawerService) private drawerService: DrawerService,
     @Inject(TaskStoreService) private taskStore: TaskStoreService,
     @Inject(UserExternalStoreService) private userExternalStore: UserExternalStoreService,
     @Inject(UserExternalService) private userExternalService: UserExternalService,
     @Inject(TaskService) private taskService: TaskService,
-    @Inject(TaskApiService) private taskApi: TaskApiService
+    @Inject(TaskApiService) private taskApi: TaskApiService,
+    @Inject(ChangeDetectorRef) private cdr: ChangeDetectorRef
   ) {
-    // date
+
     this.resetDatePicker = true // do not remove
 
     this.form = this.fb.group({
@@ -53,6 +53,7 @@ export class EntryFormComponent {
       externalServiceId: [-1, [Validators.required, greaterThanZeroValidator()]],
       externalServiceName: [''],
       status: [-1, [Validators.required, greaterThanZeroValidator()]],
+      statusName: [''],
       external_task_id: [''],
       id: ['']
     });
@@ -80,24 +81,26 @@ export class EntryFormComponent {
     this.taskStore.listenTaskToEdit().subscribe((res: ITaskFormValue | null) => {
       if (res) {
         this.form.patchValue(res)
+        this.due_date = res.due_date
       } else {
         this.onReset()
         const data = this.getDefaultFormData()
         this.form.patchValue(data)
+        this.due_date = new Date().toISOString()
       }
     })
   }
 
   private getDefaultFormData(): ITaskFormValue {
     const externalFilterVal = this.userExternalStore.getUserExternalFilter()
-    const externalServiceName = externalFilterVal
+    const externalServiceName = externalFilterVal > 0
     ? this.userExternalService.getServiceNameById(externalFilterVal)
     : ''
     const initialData: ITaskFormValue = {
       title: '',
       description: '',
       status: 1,
-      due_date: new Date().toISOString().split('T')[0],
+      due_date: new Date().toISOString(),
       externalServiceId: externalFilterVal || -1,
       externalServiceName: externalServiceName
     }
@@ -148,7 +151,7 @@ export class EntryFormComponent {
       switchMap(() => this.taskService.getTasksByService(taskData.externalServiceId)),
       catchError((err: any) => this.handleError(err)),
       finalize(() => {
-        this.back()
+        this.onCancel()
         this.drawerService.hide('loader')
       })
     )
@@ -180,7 +183,7 @@ export class EntryFormComponent {
     this.form.markAsUntouched();
   }
 
-  public onSelectDate (data: string) {
+  public onSelectDate (data: any | string) {
     this.due_date_result = data
   }
 
@@ -190,3 +193,4 @@ export class EntryFormComponent {
     return EMPTY
   }
 }
+

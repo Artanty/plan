@@ -43,7 +43,7 @@ export function getStatusOptions (): TBaseOption[] {
 export function getStatusId (statusName: string): number {
   const option = getStatusOptions()
   .filter((el: TBaseOption) => el.name === statusName)
-  if (!option.length) { throw new Error('wrong status name')}
+  if (!option.length) { throw new Error(`wrong status name: ${statusName}`)}
   return option[0].id
 }
 

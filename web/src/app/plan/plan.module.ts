@@ -1,15 +1,13 @@
-import { APP_INITIALIZER, ElementRef, InjectionToken, NgModule, inject } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, ElementRef, InjectionToken, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PlanComponent } from './plan.component';
 import { RouterModule, Routes } from '@angular/router';
 import { EntryFormComponent } from './entry-form/entry-form.component';
-import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClient, HttpClientModule, provideHttpClient } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 import { EntriesListComponent } from './entries-list/entries-list.component';
 import { DrawerComponent } from './components/drawer/drawer.component';
-
-import { DOCUMENT } from '@angular/common';
-import { Observable, debounceTime, map, distinctUntilChanged, firstValueFrom, tap } from 'rxjs';
+import { Observable, debounceTime, map, distinctUntilChanged } from 'rxjs';
 import { ResizeService } from './services/resize.service';
 import { DatePickerComponent } from './components/date-picker/date-picker.component';
 import { ExternalFormComponent } from './external-form/external-form.component';
@@ -25,7 +23,8 @@ import { StatusSelectComponent } from './components/status-select/status-select.
 import { TranslationService } from './services/translation.service';
 import { TranslatePipe } from './pipes/translate.pipe';
 import { ClickOutsideDirective } from './directives/click-outside.directive';
-
+import { TaskFormComponent } from './components/task-form/task-form.component';
+import { TaskReadonlyComponent } from './components/task-readonly/task-readonly.component';
 
 export type TResizeResult = { width: number, height: number}
 
@@ -66,7 +65,6 @@ export const remoteRoutes: Routes = [
     EntriesListComponent,
     ExternalListComponent,
     DrawerComponent,
-    DatePickerComponent,
     LoaderComponent,
     StatusSelectComponent,
     TranslatePipe,
@@ -75,9 +73,12 @@ export const remoteRoutes: Routes = [
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    FormsModule,
     HttpClientModule,
     RouterModule.forChild(remoteRoutes),
-
+    DatePickerComponent,
+    TaskFormComponent,
+    TaskReadonlyComponent
   ],
   providers: [
     // {
@@ -94,10 +95,10 @@ export const remoteRoutes: Routes = [
     TaskApiService,
     TranslationService
 
-  ]
+  ],
+  exports: [
+    PlanComponent
+  ],
+  schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
 })
-export class PlanModule {
-  constructor () {
-    // console.log(2)
-  }
-}
+export class PlanModule {}

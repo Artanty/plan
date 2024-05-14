@@ -1,11 +1,8 @@
-import { HttpBackend, HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { IGetUserExternalsApi } from '../../../../../contracts/getUserExternals';
-import { Observable, delay, finalize, firstValueFrom, lastValueFrom, startWith, take, tap } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { UserExternalApiService } from '../api/userExternal/user-external-api.service';
 import { UserExternalStoreService } from '../store/userExternal/user-external-store.service';
-import { DrawerService } from '../components/drawer/drawer.service';
-import { TSelectExternals } from '../entries-list/entries-list.component';
 
 @Injectable()
 export class UserExternalService {
