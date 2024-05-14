@@ -9,6 +9,7 @@ const express = require('express');
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
+const fs = require('fs').promises; // Use promises for fs to handle asynchronous operations
 const pool = require('./../core/db_connection')
 const getAuthenticatedUser = require ('./../external/getAuthenticatedUser')
 const validateCreateTaskData = require('./../validators/createTask')
@@ -212,8 +213,6 @@ class TasksCRUD extends BaseCRUD {
    * 
    */
   async findOrCreateExtAPI(req, res) {
-    console.log('req')
-    console.log(req.body)
     try{
       validateFindOrCreateExtData(req.body)
       
@@ -230,8 +229,6 @@ class TasksCRUD extends BaseCRUD {
           ]
         })
         .then(async ([lastTask, externalServiceId]) => {
-          console.log(lastTask)
-          console.log( externalServiceId)
           const nextExternalTaskId = lastTask
             ? getNextExternalTaskId(lastTask.external_task_id)
             : getFirstExternalTaskId(req.body.externalServiceName)
@@ -250,7 +247,6 @@ class TasksCRUD extends BaseCRUD {
               res.set('Content-Type', 'text/plain');
               res.send(commitMessage);
             }).catch(e => this.handleError(res, e))
-            
           } else {
             this.handleError(res, validation.error)
           }
@@ -353,6 +349,29 @@ class TasksCRUD extends BaseCRUD {
   //   }
   //   return result;
   // }
+  async getFullTaskByExternalId (extTaskId) {
+    const sql = `
+      SELECT t.*, te.external_task_id, te.service_id, e.name
+      FROM Tasks t
+      JOIN TaskExternals te ON t.id = te.task_id
+      JOIN Externals e ON te.service_id = e.id
+      WHERE te.external_task_id = ?
+      LIMIT 1
+    `;
+    // FROM Tasks t
+    // JOIN TaskExternals te ON t.id = te.task_id
+    // JOIN Externals e ON te.service_id = e.id
+    const [rows] = await pool.query(sql, [extTaskId]);
+    if (!rows.length) {
+      throw new Error('Record not found')
+    }
+    return rows[0];
+  }
+  getFullTaskByExternalIdAPI(req, res) {
+    this.getFullTaskByExternalId(req.params.id)
+      .then(records => res.json(records))
+      .catch(error => this.handleError(res, error));
+  }
 }
 
 const tasksCRUD = new TasksCRUD('Tasks');
@@ -361,6 +380,7 @@ app.post('/tasks', (req, res) => tasksCRUD.getNextIdAndCreate(req, res));
 app.get('/tasks/', (req, res) => tasksCRUD.readAllAPI(req, res));
 app.get('/tasks/by-service/:serviceId', (req, res) => tasksCRUD.readByServiceAPI(req, res));
 app.get('/tasks/:id', (req, res) => tasksCRUD.readAPI(req, res));
+app.get('/tasks/full/:id', (req, res) => tasksCRUD.getFullTaskByExternalIdAPI(req, res));
 app.put('/tasks/:id', (req, res) => tasksCRUD.updateAPI(req, res));
 app.delete('/tasks/:id', (req, res) => tasksCRUD.deleteWithExternalAPI(req, res));
 // app.get('/getLast', (req, res) => usersCRUD.userExternalsAPI({ params: { id: getAuthenticatedUser() } }, res));
@@ -443,9 +463,23 @@ app.get('/userExternals', (req, res) => userExternalsCRUD.getUserExternalsAPI({ 
 app.post('/userExternals/createAndLink', (req, res) => userExternalsCRUD.createAndLinkExternalServiceAPI(req, res));
 app.delete('/userExternals/:id', (req, res) => userExternalsCRUD.deleteUserExternalsAPI(req, res));
 
+// localhost:3000/get-ext-task/PLAN-0012
+app.use('/plan/', express.static(path.join(__dirname, './../public/web-host')));
 
+// /get-ext-task/PLAN-0012
+app.get('/get-ext-task/:externalId', async (req, res) => {
+  try {
+    const taskRes = await tasksCRUD.getFullTaskByExternalId(req.params.externalId)
+    const jsonData = JSON.stringify(taskRes);
+    await fs.writeFile(path.join(__dirname, './../public/web-host/assets/data.json'), jsonData);
+    res.redirect(`/plan/?ext=${req.params.externalId}`);
+  } catch (err) {
+    console.error('Error writing to file', err);
+    res.status(500).send('Error writing to file');
+  }
+});
 // Start the server
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3205;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
