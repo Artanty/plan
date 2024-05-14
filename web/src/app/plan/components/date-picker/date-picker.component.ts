@@ -1,9 +1,17 @@
-import { Component, Output, EventEmitter, Input } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { Component, Output, EventEmitter, Input, CUSTOM_ELEMENTS_SCHEMA, ChangeDetectorRef, Inject } from '@angular/core';
+import { FormGroup, FormControl, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-date-picker',
   templateUrl: './date-picker.component.html',
+  standalone: true,
+  providers: [
+    CommonModule,
+    ReactiveFormsModule
+  ],
+  imports: [ReactiveFormsModule, CommonModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   styleUrls: [
     './date-picker.component.scss',
     './../select/select.component.scss'
@@ -20,7 +28,7 @@ export class DatePickerComponent {
   // New input setter to set the date from a string in 'YYYY-MM-DD' format
   @Input() set date(dateString: string) {
     if (dateString) {
-      const parts = dateString.split('-');
+      const parts = dateString.split('T')[0]?.split('-');
       if (parts.length === 3) {
         const year = parseInt(parts[0], 10);
         const month = parseInt(parts[1], 10);
@@ -48,6 +56,10 @@ export class DatePickerComponent {
 
     this.updateDaysInMonth(today.getMonth() + 1, today.getFullYear());
     this.emitSelectedDate();
+
+    this.dateForm.get('day')?.valueChanges.subscribe((day) => {
+      this.emitSelectedDate();
+    });
 
     this.dateForm.get('month')?.valueChanges.subscribe((month) => {
       const year = this.dateForm.get('year')?.value;
