@@ -7,10 +7,11 @@
     ]
   },
   "files": [
-    "src/main.ts"
+    "src/main.ts",
+    "src/app/plan/components/task-readonly/task-readonly.component.ts"
   ],
   "include": [
     "src/**/*.d.ts",
-    "../../contracts/*.ts"
+    "../../contracts/*.ts",
   ]
 }

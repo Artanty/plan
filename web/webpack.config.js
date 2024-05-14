@@ -32,7 +32,7 @@ module.exports = {
       filename: "remoteEntry.js",
       exposes: {
         './Module': './src/app/plan/plan.module.ts',
-        // './Component': './src/app/doro/components/loading/loading.component.ts',
+        './Component': './src/app/plan/components/task-readonly/task-readonly.component.ts',
       },
       // remotes: {
       //   "au": "au@https://au2.vercel.app/remoteEntry.js",
@@ -44,7 +44,8 @@ module.exports = {
         "@angular/common": { singleton: true, strictVersion: true, requiredVersion: 'auto' },
         "@angular/common/http": { singleton: true, strictVersion: true, requiredVersion: 'auto' },
         "@angular/router": { singleton: true, strictVersion: true, requiredVersion: 'auto' },
-        // "typlib": { singleton: true, strictVersion: true, requiredVersion: 'auto' },
+        "@angular/forms": { singleton: true, strictVersion: true, requiredVersion: 'auto' },
+        "typlib": { singleton: true, strictVersion: true, requiredVersion: 'auto' },
         ...sharedMappings.getDescriptors()
       }),
 
