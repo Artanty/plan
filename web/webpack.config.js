@@ -51,8 +51,8 @@ module.exports = {
 
     }),
     sharedMappings.getPlugin(),
-    // new Dotenv({
-    //   path: './.env', // Path to .env file (this is the default)
-    // })
+    new Dotenv({
+      path: './.env', // Path to .env file (this is the default)
+    })
   ],
 };
