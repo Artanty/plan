@@ -3,6 +3,8 @@ import { ChangeDetectorRef, Component, Inject } from '@angular/core';
 import { DrawerService } from '../components/drawer/drawer.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { IGetUserExternalsApi } from '../../../../../contracts/getUserExternals';
+import { UserExternalStoreService } from '../store/userExternal/user-external-store.service';
+import { UserExternalService } from '../services/user-external.service';
 
 @Component({
   selector: 'app-external-list',
@@ -10,35 +12,23 @@ import { IGetUserExternalsApi } from '../../../../../contracts/getUserExternals'
   styleUrl: './external-list.component.scss'
 })
 export class ExternalListComponent {
-  externals$ = new BehaviorSubject<IGetUserExternalsApi[]>([]);
+
+  externals$: Observable<IGetUserExternalsApi[]>
+
   constructor(
-    @Inject(HttpClient) private http: HttpClient,
-    private drawerService: DrawerService,
-    private cdr: ChangeDetectorRef
+    @Inject(DrawerService) private drawerService: DrawerService,
+    @Inject(UserExternalStoreService) private userExternalStore: UserExternalStoreService,
+    @Inject(UserExternalService) private userExternalService: UserExternalService
   ){
-    // this.getExternalsApi()
+    this.externals$ = this.userExternalStore.listenUserExternals()
   }
+
   removeItem(item: any) {
-    this.deleteExternalApi(item.id)
+    this.userExternalService.deleteExternal(item.id).subscribe()
   }
 
   back () {
     this.drawerService.hide('externalList')
   }
 
-  private getExternalsApi (): void {
-    this.http.get<IGetUserExternalsApi[]>(`${process.env['SERVER_URL']}/userExternals`)
-    .subscribe(res => {
-      this.externals$.next(res)
-    })
-  }
-
-  private deleteExternalApi (id: number): void {
-    this.http.delete<{message: string}>(`${process.env['SERVER_URL']}/userExternals/${id}`)
-    .subscribe({
-      next: (res: any) => {
-        this.getExternalsApi()
-      }
-    })
-  }
 }

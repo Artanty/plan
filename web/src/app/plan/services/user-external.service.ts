@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { IGetUserExternalsApi } from '../../../../../contracts/getUserExternals';
-import { Observable, tap } from 'rxjs';
+import { Observable, switchMap, tap } from 'rxjs';
 import { UserExternalApiService } from '../api/userExternal/user-external-api.service';
 import { UserExternalStoreService } from '../store/userExternal/user-external-store.service';
 
@@ -25,5 +25,12 @@ export class UserExternalService {
       throw new Error(`cannot find external service by id: ${externalServiceId}`)
     }
     return found.name
+  }
+
+  public deleteExternal (id: number): Observable<IGetUserExternalsApi[]> {
+    return this.api.deleteExternalApi(id)
+    .pipe(
+      switchMap(() => this.getUserExternals())
+    )
   }
 }

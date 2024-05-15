@@ -13,4 +13,8 @@ export class UserExternalApiService {
   public getUserExternalsApi (): Observable<IGetUserExternalsApi[]> {
     return this.http.get<IGetUserExternalsApi[]>(`${process.env['SERVER_URL']}/userExternals`)
   }
+
+  public deleteExternalApi (id: number): Observable<unknown> {
+    return this.http.delete<{message: string}>(`${process.env['SERVER_URL']}/userExternals/${id}`)
+  }
 }
