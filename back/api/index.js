@@ -43,21 +43,12 @@ app.get('/users2', async (req, res) => {
   }
 });
 
-app.get('/get-creds', async (req, res) => {
+app.get('/get-updates', async (req, res) => {
   try {
-    const rows = {
-      database: process.env.DB_DATABASE,
-      user: process.env.DB_USERNAME,
-      password: process.env.DB_PASSWORD,
-      host: process.env.DB_HOST,
-      waitForConnections: true,
-      connectionLimit: 10,
-      queueLimit: 0
-    }
-    res.json(rows);
+    res.json({ updates: true });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'An error occurred' });
+    res.status(500).json({ error: error });
   }
 });
 
