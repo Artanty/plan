@@ -45,6 +45,7 @@ app.get('/users2', async (req, res) => {
 
 app.get('/get-updates', async (req, res) => {
   try {
+    console.log('/get-updates triggered')
     res.json({ updates: true });
   } catch (error) {
     console.error(error);
