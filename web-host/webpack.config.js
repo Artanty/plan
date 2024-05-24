@@ -3,6 +3,7 @@ const mf = require("@angular-architects/module-federation/webpack");
 const path = require("path");
 const share = mf.share;
 const webpack = require("webpack");
+const Dotenv = require('dotenv-webpack');
 
 const sharedMappings = new mf.SharedMappings();
 sharedMappings.register(
@@ -34,7 +35,7 @@ module.exports = {
         library: { type: "module" },
 
         remotes: {
-          "plan": "plan@http://localhost:4205/remoteEntry.js"
+          "plan": `plan@${process.env.PLAN_URL}`
         },
 
         shared: share({
@@ -48,6 +49,7 @@ module.exports = {
         })
         
     }),
-    sharedMappings.getPlugin()
+    sharedMappings.getPlugin(),
+    new Dotenv() // Add this line to load .env file
   ],
 };

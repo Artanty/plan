@@ -9,20 +9,18 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
   standalone: true,
   imports: [CommonModule, RouterOutlet, HttpClientModule],
   template: `
-    <div class="mfeWrapper" #placeHolder></div>
+    <div class="mfeWrapper" #viewContainer></div>
     <router-outlet></router-outlet>
   `,
   styles: [],
 })
 export class AppComponent implements OnInit{
   data: any = null
-  @ViewChild('placeHolder', { read: ViewContainerRef }) viewContainer!: ViewContainerRef;
+  @ViewChild('viewContainer', { read: ViewContainerRef }) viewContainer!: ViewContainerRef;
 
   constructor(
     private http: HttpClient
-  ) {
-    
-  }
+  ) {}
 
   ngOnInit(): void {
     this.fetchData();
@@ -32,7 +30,7 @@ export class AppComponent implements OnInit{
 
     const m = await loadRemoteModule({
       remoteName: 'plan',
-      remoteEntry: 'http://localhost:4205/remoteEntry.js',
+      remoteEntry: process.env['PLAN_URL'],
       exposedModule: './Component'
     });
 
