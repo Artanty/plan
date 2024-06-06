@@ -24,6 +24,7 @@ const validateExternalTaskIdNext = require('./../validators/externalTaskIdNext')
 const getDefaultDueDate = require('./../functions/getDefaultDueDate')
 const createAndLinkExternalService = require('./../dbActions/createAndLinkExternalService')
 const deleteUserExternal = require('./../dbActions/deleteUserExternal')
+const Logger = require('./../functions/logger')
 
 // app.get('/', function (req, res) {
 // 	res.send('Main page')
@@ -205,6 +206,7 @@ class TasksCRUD extends BaseCRUD {
    * 
    */
   async findOrCreateExtAPI(req, res) {
+    
     try{
       validateFindOrCreateExtData(req.body)
       
@@ -251,6 +253,7 @@ class TasksCRUD extends BaseCRUD {
         })
         .then((task) => {
           const commitMessage = `* ${msg.type}: ${msg.taskId} ${task.title}: ${msg.text} ${process.env.RED_URL}/${process.env.RED_SERVICE}/get-ext-task/${msg.taskId}`
+          Logger.debug(`Successfully sending response: ${commitMessage}`)
           res.set('Content-Type', 'text/plain');
           res.send(commitMessage);
         })

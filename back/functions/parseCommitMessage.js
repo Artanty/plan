@@ -1,8 +1,12 @@
+const Logger = require('./../functions/logger')
+
 function parseCommitMessage(message) {
-  console.log(message)
+  message = message.trim()
+  
   if (typeof message !== 'string') {
     throw new Error('message is not a string')
   }
+  
   // Regular expression pattern
   // both valid:
   // PLAN-next
@@ -12,6 +16,8 @@ function parseCommitMessage(message) {
   // Match the message against the pattern
   const match = message.match(pattern);
 
+  Logger.debug('Commit message successfully parsed')
+  
   // If the message matches the pattern, return the segments
   if (match) {
     const [_, type, taskId, text] = match;
@@ -19,6 +25,7 @@ function parseCommitMessage(message) {
   }
 
   throw new Error('Wrong commit structure while parsing')
+
 }
 
 module.exports = parseCommitMessage

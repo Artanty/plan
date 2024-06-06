@@ -1,3 +1,5 @@
+const Logger = require('./../functions/logger')
+
 function isNumericString(str) {
   return /^\d+$/.test(str);
 }
@@ -24,6 +26,8 @@ function validateExternalTaskId$ (external_task_id) {
     if (num.length !== 4){
       reject(`Wrong external_task_id: ${external_task_id}, ext number must be XXXX format`)
     }
+    
+    Logger.debug(`External task id ${external_task_id} validated`)
     
     resolve()
   })
